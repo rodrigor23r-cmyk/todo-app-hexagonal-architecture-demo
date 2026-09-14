@@ -1,9 +1,19 @@
 package com.example.infrastructure.adapter.out.persistence;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
 import com.example.domain.model.Task;
 
+
+@Mapper(componentModel = "spring")
+public interface TaskPersistenceMapper {
+
+    Task toDomain(TaskJpaEntity taskJpaEntity);
+
+    TaskJpaEntity toJpaEntity(Task task);
+}
+
+/*
 @Component 
 public class TaskPersistenceMapper {
 
@@ -36,3 +46,4 @@ public class TaskPersistenceMapper {
             .build();
     }
 }
+*/

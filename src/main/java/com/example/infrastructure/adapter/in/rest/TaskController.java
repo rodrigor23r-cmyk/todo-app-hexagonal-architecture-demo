@@ -30,19 +30,22 @@ public class TaskController {
     private final CreateTaskUseCase createTaskUseCase;
     private final GetTaskUseCase getTaskUseCase;
     private final ListTaskUseCase listTaskUseCase;
+    private final TaskRestMapper taskRestMapper;
 
 
     @PostMapping
     public ResponseEntity<TaskResponse> create(@Valid @RequestBody CreateTaskRequest createTaskRequest) {
 
-        Task task = Task.builder()
+        Task task = taskRestMapper.toDomain(createTaskRequest);
+        /*Task task = Task.builder()
             .title(createTaskRequest.getTitle())
             .description(createTaskRequest.getDescription())
-            .build();
+            .build();*/
 
         Task saved = createTaskUseCase.create(task);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(TaskResponse.from(saved));
+     // return ResponseEntity.status(HttpStatus.CREATED).body(TaskResponse.from(saved));
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskRestMapper.toResponse(saved));
     }
 
     @GetMapping("/{id}")
@@ -50,14 +53,16 @@ public class TaskController {
 
         Task got = getTaskUseCase.getById(id);
     
-        return ResponseEntity.status(HttpStatus.CREATED).body(TaskResponse.from(got));
+    // return ResponseEntity.status(HttpStatus.CREATED).body(TaskResponse.from(got));
+       return ResponseEntity.status(HttpStatus.CREATED).body(taskRestMapper.toResponse(got));
     
     }
 
     @GetMapping
     public ResponseEntity<List<TaskResponse>> getAll() {
 
-        List<TaskResponse> tasks = listTaskUseCase.findAll().stream().map(TaskResponse::from).toList();
+        List<TaskResponse> tasks = listTaskUseCase.findAll().stream().map(taskRestMapper::toResponse).toList();
+     // List<TaskResponse> tasks = listTaskUseCase.findAll().stream().map(TaskResponse::from).toList();
     
         return ResponseEntity.ok(tasks);
     

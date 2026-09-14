@@ -2,7 +2,6 @@ package com.example.infrastructure.adapter.in.rest.dto;
 
 import java.time.LocalDateTime;
 
-import com.example.domain.model.Task;
 import com.example.domain.model.TaskStatus;
 
 import lombok.Builder;
@@ -21,7 +20,7 @@ public class TaskResponse {
     private LocalDateTime createdAt;
     private LocalDateTime completedAt;
 
-
+/*
     public static TaskResponse from(Task task) {
         
         
@@ -34,5 +33,5 @@ public class TaskResponse {
             .createdAt(task.getCreatedAt())
             .completedAt(task.getCompletedAt())
             .build();
-    }
+    }*/
 }
