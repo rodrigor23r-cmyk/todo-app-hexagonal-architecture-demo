@@ -35,8 +35,11 @@ public class FileSystemStorageAdapter implements FileStoragePort {
 
         return storedName;
     }
-    /* El nombre que manda el cliente nunca se usa para construir la ruta:
-       solo se conserva la extensión, y únicamente si es alfanumérica. */
+
+    /*
+     * El nombre que manda el cliente nunca se usa para construir la ruta:
+     * solo se conserva la extensión, y únicamente si es alfanumérica.
+     */
     private String extensionOf(String fileName) {
 
         if (fileName == null)
@@ -50,5 +53,18 @@ public class FileSystemStorageAdapter implements FileStoragePort {
         String extension = fileName.substring(dot + 1);
 
         return extension.matches("[A-Za-z0-9]{1,5}") ? "." + extension.toLowerCase() : "";
+    }
+
+    @Override
+    public void delete(String storedName) {
+
+        if (storedName == null)
+            return;
+
+        try {
+            Files.deleteIfExists(uploadsDir.resolve(storedName));
+        } catch (IOException e) {
+            throw new UncheckedIOException("No se pudo borrar la imagen de la tarea", e);
+        }
     }
 }

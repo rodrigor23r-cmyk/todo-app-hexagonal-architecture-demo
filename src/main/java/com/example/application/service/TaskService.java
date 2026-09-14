@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
    3. Nada más. El controller sigue inyectando las interfaces de caso de uso igual que ahora.
  */
 
-   
+
 // Quitamos la anotación de springboot: @Service
 @RequiredArgsConstructor
 public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskUseCase, DeleteTaskUseCase,
@@ -61,9 +61,11 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
     @Override
     public void deleteById(long id) {
 
-        taskRepositoryPort.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+        Task task = taskRepositoryPort.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 
         taskRepositoryPort.deleteById(id);
+
+        fileStoragePort.delete(task.getImagePath());
 
     }
 
@@ -84,12 +86,18 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
     public Task uploadImage(long id, String fileName, byte[] content) {
 
         Task task = taskRepositoryPort.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+
+        String previousImage = task.getImagePath();
         
         String imagePath = fileStoragePort.store(fileName, content);
 
         task.attachImage(imagePath);
 
-        return taskRepositoryPort.save(task);
+        Task saved = taskRepositoryPort.save(task);
+
+        fileStoragePort.delete(previousImage);
+
+        return saved;
     }
 
 }
