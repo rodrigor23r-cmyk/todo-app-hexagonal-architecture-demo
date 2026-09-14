@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.application.port.in.CreateTaskUseCase;
+import com.example.application.port.in.DeleteTaskUseCase;
 import com.example.application.port.in.GetTaskUseCase;
 import com.example.application.port.in.ListTaskUseCase;
 import com.example.application.port.out.TaskRepositoryPort;
@@ -23,9 +24,10 @@ tengamos todos los Bean que se crean cuando se levanta el
 contexto de spring*/
 @Service 
 @RequiredArgsConstructor 
-public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskUseCase {
+public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskUseCase, DeleteTaskUseCase {
 
     private final TaskRepositoryPort taskRepositoryPort;
+
     @Override
     public Task create(Task task) {
         
@@ -41,5 +43,15 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
         
         return taskRepositoryPort.findAll();
     }
+    @Override
+    public void deleteById(long id) {
+        
+        taskRepositoryPort.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+
+        taskRepositoryPort.deleteById(id);
+        
+    }
+
+
 
 }
