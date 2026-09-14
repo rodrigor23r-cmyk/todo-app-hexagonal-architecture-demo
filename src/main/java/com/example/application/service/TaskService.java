@@ -2,7 +2,6 @@ package com.example.application.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
 
 import com.example.application.port.in.CreateTaskUseCase;
 import com.example.application.port.in.DeleteTaskUseCase;
@@ -25,9 +24,15 @@ import lombok.RequiredArgsConstructor;
  * TO_DO: ¿Qué debería hacerse para evitar el acoplamiento?
  * Crear un configuration en la capa de infraestructura donde
  * tengamos todos los Bean que se crean cuando se levanta el
- * contexto de spring
+ * contexto de spring:
+ * 1. Quitar @Service (y su import) de TaskService — dos líneas menos.
+   2. Crear una clase nueva @Configuration en infraestructura, con un método @Bean 
+      que construya el TaskService pasándole los puertos por constructor.
+   3. Nada más. El controller sigue inyectando las interfaces de caso de uso igual que ahora.
  */
-@Service
+
+   
+// Quitamos la anotación de springboot: @Service
 @RequiredArgsConstructor
 public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskUseCase, DeleteTaskUseCase,
         UpdateTaskUseCase, UploadTaskImageUseCase {

@@ -66,8 +66,7 @@ public class TaskController {
 
         Task got = getTaskUseCase.getById(id);
     
-    // return ResponseEntity.status(HttpStatus.CREATED).body(TaskResponse.from(got));
-       return ResponseEntity.status(HttpStatus.CREATED).body(taskRestMapper.toResponse(got));
+     return ResponseEntity.ok(taskRestMapper.toResponse(got)); // dará un 200 porque no está creado (201)
     
     }
 
