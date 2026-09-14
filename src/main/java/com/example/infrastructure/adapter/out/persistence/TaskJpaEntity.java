@@ -48,6 +48,9 @@ public class TaskJpaEntity {
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
 
+    @Column(name = "image_path")
+    private String imagePath;
+
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
