@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,9 +14,11 @@ import com.example.application.port.in.CreateTaskUseCase;
 import com.example.application.port.in.DeleteTaskUseCase;
 import com.example.application.port.in.GetTaskUseCase;
 import com.example.application.port.in.ListTaskUseCase;
+import com.example.application.port.in.UpdateTaskUseCase;
 import com.example.domain.model.Task;
 import com.example.infrastructure.adapter.in.rest.dto.CreateTaskRequest;
 import com.example.infrastructure.adapter.in.rest.dto.TaskResponse;
+import com.example.infrastructure.adapter.in.rest.dto.UpdateTaskRequest;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +38,7 @@ public class TaskController {
     private final ListTaskUseCase listTaskUseCase;
     private final DeleteTaskUseCase deleteTaskUseCase;
     private final TaskRestMapper taskRestMapper;
+    private final UpdateTaskUseCase updateTaskUseCase;
 
 
     @PostMapping
@@ -78,5 +82,17 @@ public class TaskController {
         deleteTaskUseCase.deleteById(id);
         
         return ResponseEntity.noContent().build();
+
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskResponse> update(@PathVariable long id, @Valid @RequestBody UpdateTaskRequest updateTaskRequest) {
+
+        Task task = taskRestMapper.toDomain(updateTaskRequest);
+
+        Task updated = updateTaskUseCase.update(id, task);
+
+        return ResponseEntity.ok(taskRestMapper.toResponse(updated));
     }
 }

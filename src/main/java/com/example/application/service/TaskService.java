@@ -8,6 +8,7 @@ import com.example.application.port.in.CreateTaskUseCase;
 import com.example.application.port.in.DeleteTaskUseCase;
 import com.example.application.port.in.GetTaskUseCase;
 import com.example.application.port.in.ListTaskUseCase;
+import com.example.application.port.in.UpdateTaskUseCase;
 import com.example.application.port.out.TaskRepositoryPort;
 import com.example.domain.exception.TaskNotFoundException;
 import com.example.domain.model.Task;
@@ -24,13 +25,13 @@ tengamos todos los Bean que se crean cuando se levanta el
 contexto de spring*/
 @Service 
 @RequiredArgsConstructor 
-public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskUseCase, DeleteTaskUseCase {
+public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskUseCase, DeleteTaskUseCase, UpdateTaskUseCase {
 
     private final TaskRepositoryPort taskRepositoryPort;
 
     @Override
     public Task create(Task task) {
-        
+        task.initDefaults(); // de motu proprio.
         return taskRepositoryPort.save(task);
     }
     @Override
@@ -50,6 +51,18 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
 
         taskRepositoryPort.deleteById(id);
         
+    }
+    @Override
+    public Task update(long id, Task task) {
+
+        Task foundedTask = taskRepositoryPort.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+        
+        foundedTask.update(task.getTitle(), task.getDescription());
+
+        foundedTask.changeStatusTo(task.getStatus());
+
+        return taskRepositoryPort.save(foundedTask);
+
     }
 
 

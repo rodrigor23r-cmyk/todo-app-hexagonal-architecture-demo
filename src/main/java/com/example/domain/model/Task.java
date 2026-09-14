@@ -24,6 +24,7 @@ public class Task {
     private TaskStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime completedAt;
+    private String imagePath;
 
     /* Los métodos siguientes aportan comportamiento. Las reglas de negocio. */
 
@@ -50,4 +51,25 @@ public class Task {
             this.createdAt = LocalDateTime.now();
     }
 
+    public void update(String title, String description) {
+
+        this.title = title;
+        this.description = description;
+    }
+
+    public void changeStatusTo(TaskStatus newStatus) {
+
+        if (newStatus == null || newStatus == this.status)
+            return ;
+
+        if (newStatus == TaskStatus.COMPLETED)
+            complete();
+        else
+            reopen();
+    }
+
+        public void attachImage(String imagePath) {
+
+        this.imagePath = imagePath;
+    }
 }
