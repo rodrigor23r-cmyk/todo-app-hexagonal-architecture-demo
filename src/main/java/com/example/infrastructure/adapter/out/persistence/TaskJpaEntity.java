@@ -35,6 +35,7 @@ public class TaskJpaEntity {
     @Column(nullable = false)
     private String title;
     
+    @Column(nullable = false)
     private String description;
     
     @Enumerated(EnumType.STRING)
