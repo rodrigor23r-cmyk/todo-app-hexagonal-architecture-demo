@@ -10,6 +10,7 @@ import com.example.infrastructure.adapter.in.rest.dto.UpdateTaskRequest;
 @Mapper(componentModel = "spring")
 public interface TaskRestMapper {
 
+    
     Task toDomain(CreateTaskRequest createTaskRequest);
 
     Task toDomain(UpdateTaskRequest updateTaskRequest);
