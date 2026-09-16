@@ -1,6 +1,7 @@
 package com.example.infrastructure.adapter.out.persistence;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import com.example.domain.model.Task;
 
@@ -9,7 +10,7 @@ import com.example.domain.model.Task;
 public interface TaskPersistenceMapper {
 
     Task toDomain(TaskJpaEntity taskJpaEntity);
-
+    
     TaskJpaEntity toJpaEntity(Task task);
 }
 
