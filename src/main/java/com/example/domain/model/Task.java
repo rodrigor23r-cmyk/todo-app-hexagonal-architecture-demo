@@ -2,6 +2,7 @@ package com.example.domain.model;
 
 import java.time.LocalDateTime;
 
+/* Comentar desde aquí para implementar record 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -26,7 +27,7 @@ public class Task {
     private LocalDateTime completedAt;
     private String imagePath;
 
-    /* Los métodos siguientes aportan comportamiento. Las reglas de negocio. */
+    // Los métodos siguientes aportan comportamiento. Las reglas de negocio. 
 
     public void complete() {
         if (this.status == TaskStatus.COMPLETED) {
@@ -73,3 +74,57 @@ public class Task {
         this.imagePath = imagePath;
     }
 }
+ Fin de comentario para probar record. */
+
+
+
+/* */
+public record Task(
+    long id,
+    String title,
+    String description,
+    TaskStatus status,
+    LocalDateTime createdAt,
+    LocalDateTime completedAt,
+    String imagePath) {
+    
+    // constructor compacto: sustituye a initDefault
+
+        public Task {
+            if (status == null)
+                status =TaskStatus.PENDING;
+            if (createdAt == null)
+                createdAt = LocalDateTime.now();
+        }
+
+        public Task complete() {
+            if (status == TaskStatus.COMPLETED)
+                throw new IllegalStateException("la tarea ya estaba completa");
+            return new Task(id, title, description, TaskStatus.COMPLETED, createdAt, LocalDateTime.now(), imagePath);
+        
+        }
+
+        public Task reopen() {
+            if (status == TaskStatus.PENDING)
+                throw new IllegalStateException("la tarea ya estaba pendiente");
+            return new Task(id, title, description, TaskStatus.PENDING, createdAt, null, imagePath);
+        
+        }
+
+        public Task changeStatusTo(TaskStatus newStatus) {
+            if (newStatus == null || newStatus == status)
+                return this;
+            return newStatus == TaskStatus.COMPLETED ? complete() : reopen();
+        }
+
+        public Task update(String title, String description) {
+            return new Task(id, title, description, status, createdAt, completedAt, imagePath);
+        }
+
+        public Task attachImage(String imagePath) {
+            return new Task(id, title, description, status, createdAt, completedAt, imagePath);
+        }
+
+
+    }
+ /* */

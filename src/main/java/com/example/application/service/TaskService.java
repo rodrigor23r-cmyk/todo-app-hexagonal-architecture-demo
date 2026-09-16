@@ -42,7 +42,7 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
 
     @Override
     public Task create(Task task) {
-        task.initDefaults(); // de motu proprio.
+        // task.initDefaults(); // comentar para la versión record de Task
         return taskRepositoryPort.save(task);
     }
 
@@ -65,7 +65,8 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
 
         taskRepositoryPort.deleteById(id);
 
-        fileStoragePort.delete(task.getImagePath());
+        // fileStoragePort.delete(task.getImagePath()); // comentar para record.
+         fileStoragePort.delete(task.imagePath());
 
     }
 
@@ -74,11 +75,13 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
 
         Task foundedTask = taskRepositoryPort.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 
-        foundedTask.update(task.getTitle(), task.getDescription());
+        // foundedTask.update(task.getTitle(), task.getDescription()); // comentar para record.
+         Task updatedTask = foundedTask.update(task.title(), task.description()).changeStatusTo(task.status());
+        
+        // foundedTask.changeStatusTo(task.getStatus()); // comentar para record.
 
-        foundedTask.changeStatusTo(task.getStatus());
-
-        return taskRepositoryPort.save(foundedTask);
+        // return taskRepositoryPort.save(foundedTask); // comentar para record.
+         return taskRepositoryPort.save(updatedTask);
 
     }
 
@@ -87,13 +90,15 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
 
         Task task = taskRepositoryPort.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 
-        String previousImage = task.getImagePath();
-        
+        // String previousImage = task.getImagePath(); // comentar para record.
+         String previousImage = task.imagePath();
+
         String imagePath = fileStoragePort.store(fileName, content);
 
         task.attachImage(imagePath);
 
-        Task saved = taskRepositoryPort.save(task);
+        // Task saved = taskRepositoryPort.save(task); // comentar para record.
+         Task saved = taskRepositoryPort.save(task.attachImage(imagePath));
 
         fileStoragePort.delete(previousImage);
 
