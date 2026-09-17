@@ -95,7 +95,7 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
 
         String imagePath = fileStoragePort.store(fileName, content);
 
-        task.attachImage(imagePath);
+        // task.attachImage(imagePath); // borrado tras pasar Task a record. La línea 101 ya hace eso.
 
         // Task saved = taskRepositoryPort.save(task); // comentar para record.
          Task saved = taskRepositoryPort.save(task.attachImage(imagePath));
