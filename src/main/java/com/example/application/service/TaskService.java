@@ -58,6 +58,7 @@ public class TaskService implements CreateTaskUseCase, GetTaskUseCase, ListTaskU
         return taskRepositoryPort.findAll();
     }
 
+    // @Transactional o en el adapter
     @Override
     public void deleteById(long id) {
 
